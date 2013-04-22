@@ -79,7 +79,6 @@ def parallel_work(jobs, nr_of_threads):
 
         if " | " in data[1]:
             (status, output) = data[1].split(" | ")
-            status = status.replace("IPMI Status: ","")
         else:
             status = "UNKNOWN"
             output = data[1]
