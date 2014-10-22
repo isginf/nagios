@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #
 # Nagios plugin to check openstack neutron
 #
