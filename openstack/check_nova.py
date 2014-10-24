@@ -29,8 +29,9 @@
 ###[ Loading modules ]###
 
 import os
-import subprocess
 import sys
+import subprocess
+from optparse import OptionParser
 import novaclient.v1_1.client as nova_client
 import keystoneclient.v2_0.client as keystone_client
 
@@ -46,6 +47,16 @@ STATE_OK = 0
 STATE_WARNING = 1
 STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
+
+# Parse parameter
+parser = OptionParser()
+parser.add_option("-c", "--count-hypervisors",
+                  action="store",
+                  type="int",
+                  dest="hypervisors",
+                  default=1,
+                  help="Minimum amount of active hypervisors")
+(options, args) = parser.parse_args()
 
 # Source keystonerc file
 command = ['bash', '-c', 'source ' + SOURCE_FILE + ' && env']
@@ -77,12 +88,13 @@ try:
       num_vms += len(nova.servers.list())
       num_flavors = len(nova.flavors.list())
 
-  print "Found " + str(num_vms) + " instances"
+  num_hypervisors = len(filter(lambda hv: hv.state=="up", nova.services.findall(binary="nova-compute")))
+  print "Found " + str(num_vms) + " instances on " + str(num_hypervisors) + " active hypervisors"
 
-  if num_flavors > 0:
+  if num_flavors > 0 and num_hypervisors >= options.hypervisors:
      sys.exit(STATE_OK)
   else:
-     sys.exit(STATE_UNKNOWN)
+     sys.exit(STATE_CRITICAL)
 except Exception, e:
   print str(e)
-  sys.exit(STATE_CRITICAL)
+  sys.exit(STATE_UNKNOWN)

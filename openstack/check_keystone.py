@@ -72,7 +72,7 @@ try:
   if num_users > 0:
      sys.exit(STATE_OK)
   else:
-     sys.exit(STATE_UNKNOWN)
+     sys.exit(STATE_CRITICAL)
 except Exception, e:
   print str(e)
-  sys.exit(STATE_CRITICAL)
+  sys.exit(STATE_UNKNOWN)
