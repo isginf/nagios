@@ -89,7 +89,7 @@ try:
       num_flavors = len(nova.flavors.list())
 
   num_hypervisors = len(filter(lambda hv: hv.state=="up", nova.services.findall(binary="nova-compute")))
-  print "Found " + str(num_vms) + " instances on " + str(num_hypervisors) + " active hypervisors"
+  print "Found " + str(num_vms) + " instances on " + str(num_hypervisors) + "/" + str(options.hypervisors) + " active hypervisors"
 
   if num_flavors > 0 and num_hypervisors >= options.hypervisors:
      sys.exit(STATE_OK)
