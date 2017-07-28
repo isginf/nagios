@@ -100,7 +100,8 @@ def parallel_work(jobs, number_processes):
         processes.append(worker)
         worker.start()
 
-    while not result_queue.empty():
+    # wait until we got a result for all hosts
+    while len(results.keys()) < len(hosts):
         data = result_queue.get()
 
         if " | " in data[1]:
