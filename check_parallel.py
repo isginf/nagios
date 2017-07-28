@@ -26,7 +26,7 @@
 import sys
 import subprocess
 import argparse
-from signal import signal, SIGINT
+from signal import signal, SIGINT, SIGKILL
 from multiprocessing import Process, Queue
 
 
@@ -101,7 +101,7 @@ def parallel_work(jobs, number_processes):
         worker.start()
 
     # wait until we got a result for all hosts
-    while len(results.keys()) < len(hosts):
+    while len(result.keys()) < len(hosts):
         data = result_queue.get()
 
         if " | " in data[1]:
