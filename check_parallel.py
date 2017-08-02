@@ -100,8 +100,8 @@ def parallel_work(jobs, number_processes):
         processes.append(worker)
         worker.start()
 
-    # wait until we got a result for all hosts
-    while len(result.keys()) < len(hosts):
+    # wait until we got a result for all jobs
+    while len(result.keys()) < len(jobs):
         data = result_queue.get()
 
         if " | " in data[1]:
@@ -146,6 +146,9 @@ elif len(hosts_unknown) > 0:
 else:
     exit_code = OK
     output += ":)"
+
+for process in processes:
+    process.terminate()
 
 print(output)
 sys.exit(exit_code)
